@@ -1,0 +1,772 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API BellaFlorPOS",
+        "description": "API REST del sistema POS de minimarket. Primero haz POST /login, copia el token y pulsa Authorize.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000/api",
+            "description": "Servidor local"
+        }
+    ],
+    "paths": {
+        "/login": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Iniciar sesión y obtener token",
+                "operationId": "1617a1d4d47d78f559486f5a3eac1e3c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "merinobrenda546@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "1234567"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Inicio de sesión correcto. Devuelve el token."
+                    },
+                    "401": {
+                        "description": "Credenciales incorrectas"
+                    },
+                    "403": {
+                        "description": "Cuenta inactiva o correo sin verificar"
+                    },
+                    "422": {
+                        "description": "Datos incompletos"
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Cerrar sesión (borra el token)",
+                "operationId": "5d27c8940c059251d4f6a951a0acb6e2",
+                "responses": {
+                    "200": {
+                        "description": "Sesión cerrada"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/me": {
+            "get": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Datos del usuario del token",
+                "operationId": "c204df3d5d2fbf88823b640189b62b79",
+                "responses": {
+                    "200": {
+                        "description": "Datos del usuario"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/categorias": {
+            "get": {
+                "tags": [
+                    "Categorías"
+                ],
+                "summary": "Listar categorías (Administrador y Almacenero)",
+                "operationId": "066eb33cb725bcd45542076ef14a3508",
+                "responses": {
+                    "200": {
+                        "description": "Lista de categorías"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Sin permiso"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/productos": {
+            "get": {
+                "tags": [
+                    "Productos"
+                ],
+                "summary": "Listar productos (los 3 roles)",
+                "operationId": "20b7b163d4bf8919eff9688bdd9d8899",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Buscar por nombre, código o código de barras",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "categoria_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "estado",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "activo",
+                                "inactivo"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "stock",
+                        "in": "query",
+                        "description": "Use \"bajo\" para ver stock bajo",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista paginada de productos"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Productos"
+                ],
+                "summary": "Crear producto (Administrador y Almacenero)",
+                "operationId": "936234b43ce149cb644d413063315956",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "codigo",
+                                    "nombre",
+                                    "categoria_id",
+                                    "unidad_medida_id",
+                                    "precio_compra",
+                                    "precio_venta"
+                                ],
+                                "properties": {
+                                    "codigo": {
+                                        "type": "string",
+                                        "example": "PROD-010"
+                                    },
+                                    "codigo_barras": {
+                                        "type": "string",
+                                        "example": "7750000000010"
+                                    },
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Arroz Costeño 1kg"
+                                    },
+                                    "categoria_id": {
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "unidad_medida_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "marca": {
+                                        "type": "string",
+                                        "example": "Costeño"
+                                    },
+                                    "precio_compra": {
+                                        "type": "number",
+                                        "example": 3.5
+                                    },
+                                    "precio_venta": {
+                                        "type": "number",
+                                        "example": 4.5
+                                    },
+                                    "stock_actual": {
+                                        "type": "number",
+                                        "example": 20
+                                    },
+                                    "stock_minimo": {
+                                        "type": "number",
+                                        "example": 5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Producto creado"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Sin permiso"
+                    },
+                    "422": {
+                        "description": "Datos inválidos o código repetido"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/productos/{id}": {
+            "get": {
+                "tags": [
+                    "Productos"
+                ],
+                "summary": "Ver un producto (los 3 roles)",
+                "operationId": "9cf5866de947e8612d99f9218d38582c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalle del producto"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "404": {
+                        "description": "Producto no encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Productos"
+                ],
+                "summary": "Editar producto (Administrador y Almacenero). No cambia el stock.",
+                "operationId": "a0512e3e4d4e2fa9375644e855c834b3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "codigo",
+                                    "nombre",
+                                    "categoria_id",
+                                    "unidad_medida_id",
+                                    "precio_compra",
+                                    "precio_venta",
+                                    "estado"
+                                ],
+                                "properties": {
+                                    "codigo": {
+                                        "type": "string",
+                                        "example": "PROD-010"
+                                    },
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Arroz Costeño 1kg"
+                                    },
+                                    "categoria_id": {
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "unidad_medida_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "precio_compra": {
+                                        "type": "number",
+                                        "example": 3.5
+                                    },
+                                    "precio_venta": {
+                                        "type": "number",
+                                        "example": 4.8
+                                    },
+                                    "stock_minimo": {
+                                        "type": "number",
+                                        "example": 5
+                                    },
+                                    "estado": {
+                                        "type": "string",
+                                        "example": "activo"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Producto actualizado"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Sin permiso"
+                    },
+                    "404": {
+                        "description": "Producto no encontrado"
+                    },
+                    "422": {
+                        "description": "Datos inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Productos"
+                ],
+                "summary": "Desactivar producto (solo Administrador)",
+                "operationId": "8a7ac27ed5503093e926e1f746b6a6d8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Producto desactivado"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Sin permiso"
+                    },
+                    "404": {
+                        "description": "Producto no encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/clientes": {
+            "get": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Listar clientes (Administrador y Vendedor)",
+                "operationId": "2c6296ec184468ca4182d6d48879a269",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Buscar por nombre, documento o teléfono",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "example": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista paginada de clientes"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Sin permiso"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Crear cliente (Administrador y Vendedor)",
+                "operationId": "6be1248b4ab20b1a72606e0e9856a800",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "tipo_documento",
+                                    "nombres"
+                                ],
+                                "properties": {
+                                    "tipo_documento": {
+                                        "type": "string",
+                                        "example": "DNI",
+                                        "enum": [
+                                            "DNI",
+                                            "RUC",
+                                            "CE",
+                                            "OTRO"
+                                        ]
+                                    },
+                                    "numero_documento": {
+                                        "type": "string",
+                                        "example": "87654321"
+                                    },
+                                    "nombres": {
+                                        "type": "string",
+                                        "example": "Ana"
+                                    },
+                                    "apellidos": {
+                                        "type": "string",
+                                        "example": "Torres"
+                                    },
+                                    "telefono": {
+                                        "type": "string",
+                                        "example": "999888777"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "ana@correo.com"
+                                    },
+                                    "direccion": {
+                                        "type": "string",
+                                        "example": "Av. Lima 123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Cliente creado"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Sin permiso"
+                    },
+                    "422": {
+                        "description": "Datos inválidos o documento repetido"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/ventas": {
+            "get": {
+                "tags": [
+                    "Ventas"
+                ],
+                "summary": "Listar ventas (Administrador: todas. Vendedor: solo las suyas)",
+                "operationId": "d04ffa062551d461057f2f8dfd575073",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fecha",
+                        "in": "query",
+                        "description": "Formato AAAA-MM-DD",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "estado",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "pendiente",
+                                "pagada",
+                                "anulada"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "example": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista paginada de ventas"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Sin permiso"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Ventas"
+                ],
+                "summary": "Cobrar una venta (Administrador y Vendedor). Descuenta stock y registra Kardex y pago.",
+                "operationId": "d9efe2e6c160eb5569c387c7b205cff6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "metodo_pago_id",
+                                    "items"
+                                ],
+                                "properties": {
+                                    "cliente_id": {
+                                        "type": "integer",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "metodo_pago_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "monto_recibido": {
+                                        "type": "number",
+                                        "example": 50
+                                    },
+                                    "referencia_pago": {
+                                        "type": "string",
+                                        "example": ""
+                                    },
+                                    "observaciones": {
+                                        "type": "string",
+                                        "example": "Venta desde Swagger"
+                                    },
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "producto_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "cantidad": {
+                                                    "type": "number",
+                                                    "example": 2
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Venta cobrada"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Sin permiso"
+                    },
+                    "422": {
+                        "description": "Stock insuficiente o datos inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/ventas/{id}": {
+            "get": {
+                "tags": [
+                    "Ventas"
+                ],
+                "summary": "Ver una venta con su detalle y pago",
+                "operationId": "ea7ab8c7efc22c8eaa338dab8787017f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalle de la venta"
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "403": {
+                        "description": "Sin permiso (venta de otro vendedor)"
+                    },
+                    "404": {
+                        "description": "Venta no encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Pega solo el token, sin la palabra Bearer.",
+                "bearerFormat": "Sanctum",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Autenticación"
+        },
+        {
+            "name": "Categorías"
+        },
+        {
+            "name": "Productos"
+        },
+        {
+            "name": "Clientes"
+        },
+        {
+            "name": "Ventas"
+        }
+    ]
+}

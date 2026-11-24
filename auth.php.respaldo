@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title', 'Bella Flor')</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --rosa-200: #ffc6dc;
+            --rosa-500: #e8578a;
+            --rosa-600: #d23f75;
+            --rosa-700: #a82a58;
+            --tinta: #4a2335;
+            --tinta-suave: #8b5a6e;
+            --cristal: rgba(255, 255, 255, .55);
+            --borde-cristal: rgba(255, 255, 255, .85);
+        }
+        html, body { min-height: 100%; }
+        body {
+            font-family: "Outfit", "Segoe UI", system-ui, sans-serif;
+            color: var(--tinta);
+            background:
+                radial-gradient(circle at 18% 12%, #ffd6e7 0%, transparent 45%),
+                radial-gradient(circle at 85% 90%, #ffc2da 0%, transparent 50%),
+                linear-gradient(135deg, #fff1f6 0%, #ffe3ee 55%, #ffd3e4 100%);
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            padding: 24px; position: relative; overflow-x: hidden;
+        }
+
+        /* ---------- Formas decorativas (estilo 3D suave) ---------- */
+        .forma { position: fixed; pointer-events: none; z-index: 0; }
+        .anillo {
+            width: 170px; height: 170px; top: 7%; left: 22%;
+            border-radius: 50%;
+            border: 30px solid #ff8fb8;
+            border-right-color: transparent;
+            transform: rotate(35deg);
+            filter: drop-shadow(0 18px 20px rgba(210, 63, 117, .25));
+        }
+        .pastilla {
+            width: 150px; height: 56px; border-radius: 40px;
+            background: linear-gradient(160deg, #fff, #ffb3d1 70%, #ff8fb8);
+            box-shadow: 0 16px 26px rgba(210, 63, 117, .25), inset 0 -6px 10px rgba(210, 63, 117, .18);
+        }
+        .p1 { top: 33%; left: 14%; transform: rotate(-32deg); }
+        .p2 { top: 47%; left: 11%; width: 96px; height: 38px; transform: rotate(-32deg); opacity: .9; }
+        .media-luna {
+            width: 210px; height: 105px; bottom: 6%; left: 20%;
+            border-radius: 210px 210px 0 0;
+            background: radial-gradient(circle at 30% 100%, #ffd1e3, #ff7fae 85%);
+            box-shadow: 0 22px 34px rgba(210, 63, 117, .28);
+        }
+        .nube {
+            width: 440px; height: 190px; bottom: -40px; right: -60px;
+            border-radius: 60% 40% 55% 45% / 60% 55% 45% 40%;
+            background: linear-gradient(160deg, #fff 0%, #ffb7d2 55%, #ff8fb8 100%);
+            box-shadow: 0 24px 40px rgba(210, 63, 117, .22), inset 0 -14px 24px rgba(210, 63, 117, .2);
+            transform: rotate(-6deg);
+        }
+        .onda {
+            width: 130px; height: 44px; top: 38%; right: 16%;
+            border-radius: 30px;
+            background: linear-gradient(160deg, #fff, #ffa9ca);
+            box-shadow: 0 12px 20px rgba(210, 63, 117, .22);
+            transform: rotate(14deg);
+        }
+        .onda.o2 { top: 45%; right: 12%; width: 90px; height: 34px; transform: rotate(-8deg); opacity: .9; }
+        .arco {
+            width: 260px; height: 260px; top: -90px; right: 10%;
+            border-radius: 50%;
+            border: 34px solid rgba(255, 143, 184, .45);
+        }
+
+        /* ---------- Tarjeta de cristal ---------- */
+        .card {
+            position: relative; z-index: 1;
+            width: 100%; max-width: 420px;
+            padding: 40px 36px 32px;
+            background: var(--cristal);
+            -webkit-backdrop-filter: blur(22px) saturate(1.4);
+            backdrop-filter: blur(22px) saturate(1.4);
+            border: 1.5px solid var(--borde-cristal);
+            border-radius: 30px;
+            box-shadow: 0 30px 70px rgba(210, 63, 117, .22), inset 0 1px 0 rgba(255, 255, 255, .9);
+        }
+        .card-wide { max-width: 560px; }
+
+        .marca { text-align: center; margin-bottom: 26px; }
+        .marca-icono {
+            width: 54px; height: 54px; margin: 0 auto 10px;
+            display: grid; place-items: center; font-size: 28px;
+            background: linear-gradient(145deg, #fff, var(--rosa-200));
+            border-radius: 18px;
+            box-shadow: 0 10px 20px rgba(210, 63, 117, .2);
+        }
+        .marca h1 { font-size: 26px; font-weight: 700; color: var(--rosa-600); letter-spacing: -.3px; }
+        .marca p { font-size: 14px; color: var(--tinta-suave); margin-top: 2px; }
+
+        h2 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+        .sub { font-size: 14.5px; color: var(--tinta-suave); line-height: 1.5; margin-bottom: 24px; }
+
+        .campo { margin-bottom: 16px; }
+        .campo label { display: block; font-size: 13.5px; font-weight: 600; margin-bottom: 7px; }
+        .entrada { position: relative; }
+        .entrada input {
+            width: 100%; padding: 13px 16px; font: inherit; font-size: 15px; color: var(--tinta);
+            background: rgba(255, 255, 255, .85);
+            border: 1.5px solid transparent; border-radius: 14px; outline: none;
+            transition: border-color .15s, box-shadow .15s;
+        }
+        .entrada input::placeholder { color: #c4a0b0; }
+        .entrada input:focus {
+            border-color: var(--rosa-500);
+            box-shadow: 0 0 0 4px rgba(232, 87, 138, .18);
+        }
+        .entrada.con-ojo input { padding-right: 48px; }
+        .ojo {
+            position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+            width: 36px; height: 36px; border: 0; background: none; cursor: pointer;
+            color: var(--tinta-suave); border-radius: 10px; display: grid; place-items: center;
+        }
+        .ojo:hover { color: var(--rosa-600); }
+        .ojo:focus-visible { outline: 3px solid rgba(232, 87, 138, .4); }
+        .ojo svg { width: 20px; height: 20px; }
+
+        .fila { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 4px 0 22px; font-size: 13.5px; flex-wrap: wrap; }
+        .recordar { display: flex; align-items: center; gap: 8px; color: var(--tinta-suave); cursor: pointer; }
+        .recordar input { width: 17px; height: 17px; accent-color: var(--rosa-500); }
+        a.enlace { color: var(--rosa-600); font-weight: 600; text-decoration: none; }
+        a.enlace:hover { text-decoration: underline; }
+
+        .btn {
+            display: block; width: 100%; padding: 14px; border: 0; cursor: pointer;
+            font: inherit; font-size: 16px; font-weight: 600; color: #fff; text-align: center; text-decoration: none;
+            background: linear-gradient(135deg, var(--rosa-500), var(--rosa-700));
+            border-radius: 14px;
+            box-shadow: 0 12px 26px rgba(210, 63, 117, .38);
+            transition: transform .15s, box-shadow .15s, filter .15s;
+        }
+        .btn:hover { transform: translateY(-1px); filter: brightness(1.06); box-shadow: 0 16px 30px rgba(210, 63, 117, .45); }
+        .btn:focus-visible { outline: 3px solid rgba(232, 87, 138, .5); outline-offset: 2px; }
+        .btn-suave {
+            background: rgba(255, 255, 255, .75); color: var(--rosa-700); box-shadow: none;
+            border: 1.5px solid var(--rosa-200);
+        }
+        .btn-suave:hover { box-shadow: none; background: #fff; }
+        form + form { margin-top: 10px; }
+
+        .aviso { padding: 12px 16px; border-radius: 14px; font-size: 14px; line-height: 1.45; margin-bottom: 18px; }
+        .aviso-ok { background: rgba(220, 252, 231, .85); color: #166534; border: 1px solid #bbf7d0; }
+        .aviso-error { background: rgba(255, 228, 232, .9); color: #9f1239; border: 1px solid #fecdd3; }
+        .nota { color: var(--tinta-suave); font-size: 12.5px; margin-top: 6px; }
+
+        .pie { text-align: center; font-size: 13px; color: var(--tinta-suave); margin-top: 22px; }
+        .volver { text-align: center; margin-top: 18px; font-size: 14px; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+        .separador { height: 1px; background: rgba(168, 42, 88, .15); margin: 26px 0 22px; }
+        h3 { font-size: 17px; font-weight: 700; margin-bottom: 14px; }
+
+        @media (max-width: 899px) { .anillo, .p1, .p2, .media-luna, .onda, .arco { display: none; } }
+        @media (max-width: 520px) {
+            .card { padding: 30px 22px 26px; border-radius: 24px; }
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+    </style>
+</head>
+<body>
+    <span class="forma arco"></span>
+    <span class="forma anillo"></span>
+    <span class="forma pastilla p1"></span>
+    <span class="forma pastilla p2"></span>
+    <span class="forma media-luna"></span>
+    <span class="forma onda"></span>
+    <span class="forma onda o2"></span>
+    <span class="forma nube"></span>
+
+    <main class="card @yield('card_class')">
+        <div class="marca">
+            <div class="marca-icono">🌸</div>
+            <h1>Bella Flor</h1>
+            <p>Sistema de Punto de Venta</p>
+        </div>
+
+        @yield('content')
+    </main>
+
+    <script>
+        function verClave(idInput, btn) {
+            const input = document.getElementById(idInput);
+            const mostrar = input.type === 'password';
+            input.type = mostrar ? 'text' : 'password';
+            btn.setAttribute('aria-label', mostrar ? 'Ocultar contraseña' : 'Mostrar contraseña');
+            btn.style.color = mostrar ? 'var(--rosa-600)' : '';
+        }
+    </script>
+</body>
+</html>

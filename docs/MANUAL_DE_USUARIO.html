@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Usuario - Florería Bella Flor POS</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap');
+
+        :root {
+            --primario: #d65a7a;
+            --primario-oscuro: #b83d5f;
+            --primario-claro: #fbebf0;
+            --texto: #1f2937;
+            --texto-suave: #4b5563;
+            --texto-mutado: #6b7280;
+            --borde: #e5e7eb;
+            --fondo: #f9fafb;
+            --blanco: #ffffff;
+            --exito: #10b981;
+            --advertencia: #f59e0b;
+            --alerta: #ef4444;
+            --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--texto);
+            background: #eef2f6;
+            line-height: 1.65;
+            font-size: 14.5px;
+        }
+
+        /* Barra flotante de acciones */
+        .toolbar {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--borde);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: var(--sombra);
+        }
+
+        .toolbar-title {
+            font-weight: 700;
+            color: var(--primario-oscuro);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toolbar-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            background: var(--primario);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--primario-oscuro);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primario-oscuro);
+            border: 1px solid var(--primario);
+        }
+
+        .btn-outline:hover {
+            background: var(--primario-claro);
+        }
+
+        /* Contenedor del Documento */
+        .document-wrapper {
+            max-width: 900px;
+            margin: 30px auto;
+            background: var(--blanco);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .page {
+            padding: 55px 65px;
+            position: relative;
+        }
+
+        .page-break {
+            page-break-after: always;
+            border-bottom: 2px dashed #d1d5db;
+            margin: 40px 0;
+        }
+
+        /* Carátula / Portada */
+        .caratula {
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: center;
+            padding: 40px 30px;
+            background: linear-gradient(180deg, #ffffff 0%, #fff7f9 100%);
+            border: 8px double var(--primario-claro);
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .caratula-header h4 {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: var(--texto-mutado);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .caratula-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--texto);
+            margin-bottom: 25px;
+        }
+
+        .caratula-logo-box {
+            margin: 20px auto;
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            background: var(--primario-claro);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--primario);
+            box-shadow: 0 8px 20px rgba(214, 90, 122, 0.25);
+            overflow: hidden;
+        }
+
+        .caratula-logo-box img {
+            max-width: 130px;
+            max-height: 130px;
+            object-fit: contain;
+        }
+
+        .caratula-body h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            color: var(--primario-oscuro);
+            margin-bottom: 8px;
+            line-height: 1.25;
+        }
+
+        .caratula-body h3 {
+            font-size: 18px;
+            color: var(--texto-suave);
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .badge-version {
+            display: inline-block;
+            background: var(--primario);
+            color: white;
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 5px 14px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .caratula-tabla-datos {
+            margin: 30px auto 10px;
+            width: 100%;
+            max-width: 620px;
+            border-collapse: collapse;
+            font-size: 13.5px;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            border: 1px solid var(--borde);
+        }
+
+        .caratula-tabla-datos td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .caratula-tabla-datos td.etiqueta {
+            font-weight: 700;
+            color: var(--primario-oscuro);
+            width: 38%;
+            background: #fffafa;
+        }
+
+        .caratula-footer {
+            font-size: 12.5px;
+            color: var(--texto-mutado);
+            margin-top: 20px;
+            border-top: 1px solid var(--borde);
+            padding-top: 14px;
+        }
+
+        /* Tipografía de contenido */
+        h1, h2, h3, h4 {
+            color: var(--texto);
+            margin-top: 28px;
+            margin-bottom: 14px;
+            font-weight: 700;
+        }
+
+        h1.capitulo-titulo {
+            font-size: 22px;
+            color: var(--primario-oscuro);
+            border-bottom: 3px solid var(--primario);
+            padding-bottom: 8px;
+            margin-top: 36px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2.seccion-titulo {
+            font-size: 17px;
+            color: #111827;
+            border-left: 4px solid var(--primario);
+            padding-left: 10px;
+            margin-top: 24px;
+        }
+
+        h3 {
+            font-size: 15px;
+            color: #374151;
+        }
+
+        p {
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 24px;
+            margin-bottom: 16px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        /* Tablas */
+        table.tabla-custom {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 18px 0;
+            font-size: 13.5px;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid var(--borde);
+        }
+
+        table.tabla-custom th {
+            background: var(--primario-claro);
+            color: var(--primario-oscuro);
+            font-weight: 700;
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 2px solid var(--primario);
+        }
+
+        table.tabla-custom td {
+            padding: 9px 14px;
+            border-bottom: 1px solid var(--borde);
+            vertical-align: middle;
+        }
+
+        table.tabla-custom tr:last-child td {
+            border-bottom: none;
+        }
+
+        table.tabla-custom tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        /* Cuadros de Alerta / Callouts */
+        .callout {
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin: 18px 0;
+            font-size: 13.5px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            border-left: 4px solid;
+        }
+
+        .callout-info {
+            background: #eff6ff;
+            border-color: #3b82f6;
+            color: #1e40af;
+        }
+
+        .callout-warning {
+            background: #fffbeb;
+            border-color: #f59e0b;
+            color: #92400e;
+        }
+
+        .callout-tip {
+            background: #f0fdf4;
+            border-color: #10b981;
+            color: #065f46;
+        }
+
+        .callout-icon {
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        /* Marcos para Imágenes / Screenshots */
+        .screenshot-box {
+            margin: 22px 0;
+            border: 1px solid var(--borde);
+            border-radius: 10px;
+            background: #fdfdfd;
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .screenshot-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .screenshot-caption {
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--texto-mutado);
+            font-style: italic;
+        }
+
+        .screenshot-placeholder {
+            border: 2px dashed #cbd5e1;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 35px 20px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .screenshot-placeholder .filename {
+            display: block;
+            font-family: monospace;
+            font-weight: 700;
+            color: var(--primario-oscuro);
+            background: #feeef2;
+            padding: 4px 10px;
+            border-radius: 4px;
+            width: fit-content;
+            margin: 8px auto;
+            border: 1px solid #fecdd3;
+        }
+
+        /* Índice */
+        .indice-grid {
+            background: #fff7f9;
+            border: 1px solid #fbcfe8;
+            border-radius: 10px;
+            padding: 22px 30px;
+            margin: 20px 0;
+        }
+
+        .indice-grid ol {
+            margin-left: 20px;
+        }
+
+        .indice-grid li {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primario-oscuro);
+        }
+
+        .indice-grid a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .indice-grid a:hover {
+            text-decoration: underline;
+        }
+
+        .indice-subitems {
+            font-weight: 400;
+            color: var(--texto-suave);
+            margin-top: 4px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        /* Estilos de Impresión / Guardar PDF */
+        @media print {
+            body {
+                background: white;
+                font-size: 12pt;
+            }
+            .toolbar {
+                display: none !important;
+            }
+            .document-wrapper {
+                box-shadow: none;
+                margin: 0;
+                max-width: 100%;
+                border-radius: 0;
+            }
+            .page {
+                padding: 0;
+            }
+            .page-break {
+                page-break-after: always;
+                border: none;
+                margin: 0;
+            }
+            .caratula {
+                height: 98vh;
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BARRA SUPERIOR DE ACCIONES -->
+    <div class="toolbar">
+        <div class="toolbar-title">
+            <span>🌸</span>
+            <strong>Florería Bella Flor POS</strong> — Manual Oficial de Usuario
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn btn-outline" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">⬆ Ir a Carátula</button>
+            <button class="btn" onclick="window.print()">🖨️ Imprimir / Guardar como PDF</button>
+        </div>
+    </div>
+
+    <div class="document-wrapper">
+        <div class="page">
+
+            <!-- ========================================== -->
+            <!-- 1. HOJA DE CARÁTULA / PORTADA              -->
+            <!-- ========================================== -->
+            <div class="caratula">
+                <div class="caratula-header">
+                    <h4>PROYECTO DE DESARROLLO DE SOFTWARE</h4>
+                    <h2>SISTEMA WEB DE PUNTO DE VENTA E INVENTARIOS</h2>
+                </div>
+
+                <div class="caratula-logo-box">
+                    <img src="img/01_caratula_logo.png" alt="Logo Bella Flor" onerror="this.onerror=null; this.parentElement.innerHTML='<span style=\'font-size:48px;\'>🌸</span>';">
+                </div>
+
+                <div class="caratula-body">
+                    <h1>FLORERÍA BELLA FLOR POS</h1>
+                    <h3>MANUAL DE USUARIO DEL SISTEMA</h3>
+                    <span class="badge-version">VERSIÓN 1.0 FINAL · 2026</span>
+                </div>
+
+                <table class="caratula-tabla-datos">
+                    <tr>
+                        <td class="etiqueta">Institución:</td>
+                        <td>[Ingresa aquí tu Institución / Universidad / Instituto / Empresa]</td>
+                    </tr>
+                    <tr>
+                        <td class="etiqueta">Carrera / Área:</td>
+                        <td>[Ingresa aquí tu Carrera Profesional / Área]</td>
+                    </tr>
+                    <tr>
+                        <td class="etiqueta">Asignatura / Curso:</td>
+                        <td>[Ingresa aquí el Nombre del Curso o Proyecto]</td>
+                    </tr>
+                    <tr>
+                        <td class="etiqueta">Integrantes / Autores:</td>
+                        <td>
+                            1. [Nombre Completo del Integrante 1]<br>
+                            2. [Nombre Completo del Integrante 2]<br>
+                            3. [Nombre Completo del Integrante 3]
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="etiqueta">Docente / Asesor:</td>
+                        <td>[Nombre del Docente o Supervisor del Proyecto]</td>
+                    </tr>
+                    <tr>
+                        <td class="etiqueta">Fecha de Entrega:</td>
+                        <td>Noviembre 2026</td>
+                    </tr>
+                </table>
+
+                <div class="caratula-footer">
+                    Documento de Uso Exclusivo y Guía Operativa · Florería Bella Flor POS © 2026
+                </div>
+            </div>
+
+            <div class="page-break"></div>
+
+            <!-- ========================================== -->
+            <!-- FICHA TÉCNICA E ÍNDICE                     -->
+            <!-- ========================================== -->
+            <h1 class="capitulo-titulo">📌 FICHA TÉCNICA DEL SISTEMA</h1>
+            <table class="tabla-custom">
+                <tr>
+                    <th style="width: 30%;">Parámetro</th>
+                    <th>Especificación</th>
+                </tr>
+                <tr>
+                    <td><strong>Nombre de la Solución</strong></td>
+                    <td>Bella Flor POS</td>
+                </tr>
+                <tr>
+                    <td><strong>Versión del Release</strong></td>
+                    <td>1.0.0 Final</td>
+                </tr>
+                <tr>
+                    <td><strong>Plataforma / Arquitectura</strong></td>
+                    <td>Sistema Web MVC desarrollado sobre Laravel Framework</td>
+                </tr>
+                <tr>
+                    <td><strong>Motor de Base de Datos</strong></td>
+                    <td>MySQL / MariaDB</td>
+                </tr>
+                <tr>
+                    <td><strong>Soporte de Moneda</strong></td>
+                    <td>Soles Peruanos (S/) con soporte decimal para cantidades y precios</td>
+                </tr>
+                <tr>
+                    <td><strong>Idiomas Disponibles</strong></td>
+                    <td>Español (Predeterminado), Inglés, Italiano</td>
+                </tr>
+                <tr>
+                    <td><strong>Perfiles de Usuario</strong></td>
+                    <td>Administrador (Total), Vendedor (Caja/POS/Clientes), Almacenero (Inventario/Compras)</td>
+                </tr>
+            </table>
+
+            <h1 class="capitulo-titulo" style="margin-top: 35px;">📑 ÍNDICE GENERAL DE CONTENIDOS</h1>
+            <div class="indice-grid">
+                <ol>
+                    <li><a href="#cap1">Capítulo 1: Introducción y Aspectos Generales</a>
+                        <div class="indice-subitems">Objetivos, alcance, requerimientos del sistema y matriz de roles de usuario.</div>
+                    </li>
+                    <li><a href="#cap2">Capítulo 2: Acceso, Seguridad y Configuración Personal</a>
+                        <div class="indice-subitems">Vista pública, login, recuperación de clave, cambio de idioma, perfil de usuario y logout.</div>
+                    </li>
+                    <li><a href="#cap3">Capítulo 3: Paneles Principales (Dashboards)</a>
+                        <div class="indice-subitems">Métricas del Administrador, panel del Vendedor y control del Almacenero.</div>
+                    </li>
+                    <li><a href="#cap4">Capítulo 4: Módulo de Punto de Venta (POS) y Ventas</a>
+                        <div class="indice-subitems">Venta rápida, lector de barras, carrito, selección de cliente, medios de pago, tickets y anulación.</div>
+                    </li>
+                    <li><a href="#cap5">Capítulo 5: Módulo de Productos, Categorías e Inventario</a>
+                        <div class="indice-subitems">Catálogo floral, registro, edición, categorías, unidades de medida, Kardex y ajustes de stock.</div>
+                    </li>
+                    <li><a href="#cap6">Capítulo 6: Módulo de Compras y Proveedores</a>
+                        <div class="indice-subitems">Directorio de proveedores, registro de órdenes de compra, ingreso al stock y anulación.</div>
+                    </li>
+                    <li><a href="#cap7">Capítulo 7: Módulo de Clientes</a>
+                        <div class="indice-subitems">Base de datos de clientes, registro ágil y consulta de compras históricas.</div>
+                    </li>
+                    <li><a href="#cap8">Capítulo 8: Módulo de Reportes y Estadísticas</a>
+                        <div class="indice-subitems">Ventas por períodos, productos más vendidos, filtros por cajero y exportación.</div>
+                    </li>
+                    <li><a href="#cap9">Capítulo 9: Módulo de Administración y Configuración</a>
+                        <div class="indice-subitems">Gestión de usuarios/roles y configuración de tienda (RUC, logo, pie de ticket).</div>
+                    </li>
+                    <li><a href="#cap10">Capítulo 10: Preguntas Frecuentes y Soporte (FAQ)</a>
+                        <div class="indice-subitems">Solución a las dudas y situaciones operativas más comunes.</div>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="page-break"></div>
+
+            <!-- ========================================== -->
+            <!-- CAPÍTULO 1                                 -->
+            <!-- ========================================== -->
+            <div id="cap1">
+                <h1 class="capitulo-titulo">CAPÍTULO 1: INTRODUCCIÓN Y ASPECTOS GENERALES</h1>
+                
+                <h2 class="seccion-titulo">1.1. Objetivo del Manual</h2>
+                <p>
+                    Este manual tiene como propósito instruir a los diferentes colaboradores y administradores de la <strong>Florería Bella Flor</strong> en el uso eficiente, seguro y ágil de las herramientas del sistema informático <strong>Bella Flor POS</strong>, garantizando un flujo de trabajo óptimo en caja, almacén y gerencia.
+                </p>
+
+                <h2 class="seccion-titulo">1.2. Alcance del Sistema</h2>
+                <p>
+                    El sistema abarca la totalidad del flujo operativo de la florería, incluyendo la atención directa en mostrador con generación de tickets térmicos, el abastecimiento de mercadería con proveedores, el control de mermas y ajustes de inventario mediante Kardex, así como la consulta gerencial de reportes financieros.
+                </p>
+
+                <h2 class="seccion-titulo">1.3. Requisitos de Operación</h2>
+                <ul>
+                    <li><strong>Dispositivos Compatibles:</strong> Computadora de escritorio, laptop o tablet con cualquier sistema operativo (Windows, macOS, Linux).</li>
+                    <li><strong>Navegadores Soportados:</strong> Google Chrome, Mozilla Firefox, Microsoft Edge o Apple Safari en versiones actualizadas.</li>
+                    <li><strong>Periféricos Opcionales para Caja:</strong> Lector de código de barras USB/Bluetooth e impresora térmica de tickets de 58mm u 80mm.</li>
+                </ul>
+
+                <h2 class="seccion-titulo">1.4. Matriz de Roles y Permisos de Usuario</h2>
+                <table class="tabla-custom">
+                    <thead>
+                        <tr>
+                            <th>Módulo / Operación</th>
+                            <th style="text-align:center;">Administrador</th>
+                            <th style="text-align:center;">Vendedor / Cajero</th>
+                            <th style="text-align:center;">Almacenero</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Dashboard Gerencial de Estadísticas</td>
+                            <td style="text-align:center;">✔️ Acceso Total</td>
+                            <td style="text-align:center;">❌ No</td>
+                            <td style="text-align:center;">❌ No</td>
+                        </tr>
+                        <tr>
+                            <td>Panel Operativo Específico</td>
+                            <td style="text-align:center;">✔️ Sí</td>
+                            <td style="text-align:center;">✔️ Ventas</td>
+                            <td style="text-align:center;">✔️ Almacén</td>
+                        </tr>
+                        <tr>
+                            <td>Punto de Venta (POS) y Facturación</td>
+                            <td style="text-align:center;">✔️ Sí</td>
+                            <td style="text-align:center;">✔️ Sí</td>
+                            <td style="text-align:center;">❌ No</td>
+                        </tr>
+                        <tr>
+                            <td>Anulación de Ventas Emitidas</td>
+                            <td style="text-align:center;">✔️ Sí (Exclusivo)</td>
+                            <td style="text-align:center;">❌ No</td>
+                            <td style="text-align:center;">❌ No</td>
+                        </tr>
+                        <tr>
+                            <td>Crear y Modificar Productos</td>
+                            <td style="text-align:center;">✔️ Sí</td>
+                            <td style="text-align:center;">❌ Solo Consulta</td>
+                            <td style="text-align:center;">✔️ Sí</td>
+                        </tr>
+                        <tr>
+                            <td>Kardex y Ajuste Manual de Stock</td>
+                            <td style="text-align:center;">✔️ Sí</td>
+                            <td style="text-align:center;">❌ No</td>
+                            <td style="text-align:center;">✔️ Sí</td>
+                        </tr>
+                        <tr>
+                            <td>Compras e Ingreso de Mercadería</td>
+                            <td style="text-align:center;">✔️ Sí</td>
+                            <td style="text-align:center;">❌ No</td>
+                            <td style="text-align:center;">✔️ Sí</td>
+                        </tr>
+                        <tr>
+                            <td>Gestión de Clientes</td>
+                            <td style="text-align:center;">✔️ Total</td>
+                            <td style="text-align:center;">✔️ Registro y Edición</td>
+                            <td style="text-align:center;">❌ No</td>
+                        </tr>
+                        <tr>
+                            <td>Gestión de Usuarios y Roles</td>
+                            <td style="text-align:center;">✔️ Sí (Exclusivo)</td>
+                            <td style="text-align:center;">❌ No</td>
+                            <td style="text-align:center;">❌ No</td>
+                        </tr>
+                        <tr>
+                            <td>Configuración de la Tienda (RUC, Logo)</td>
+                            <td style="text-align:center;">✔️ Sí (Exclusivo)</td>
+                            <td style="text-align:center;">❌ No</td>
+                            <td style="text-align:center;">❌ No</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="page-break"></div>
+
+            <!-- ========================================== -->
+            <!-- CAPÍTULO 2                                 -->
+            <!-- ========================================== -->
+            <div id="cap2">
+                <h1 class="capitulo-titulo">CAPÍTULO 2: ACCESO, SEGURIDAD Y CONFIGURACIÓN PERSONAL</h1>
+
+                <h2 class="seccion-titulo">2.1. Vista Pública del Catálogo</h2>
+                <p>
+                    Permite a los clientes externos o visitantes navegar las flores y arreglos disponibles sin necesidad de iniciar sesión.
+                </p>
+                <div class="screenshot-box">
+                    <img src="img/02_vista_publica.png" alt="Vista Pública" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Vista Pública del Catálogo</strong>
+                        <span class="filename">docs/img/02_vista_publica.png</span>
+                        <em>Toma la captura de la ruta: /publico</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 2.1: Interfaz pública del catálogo de productos florales.</div>
+                </div>
+
+                <h2 class="seccion-titulo">2.2. Inicio de Sesión (Login)</h2>
+                <p>
+                    Para ingresar al sistema privado, acceda a <code>/login</code> e introduzca su correo y contraseña asignada:
+                </p>
+                <div class="screenshot-box">
+                    <img src="img/03_login.png" alt="Login" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Formulario de Login</strong>
+                        <span class="filename">docs/img/03_login.png</span>
+                        <em>Toma la captura de la ruta: /login</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 2.2: Pantalla de inicio de sesión de Bella Flor POS.</div>
+                </div>
+
+                <h2 class="seccion-titulo">2.3. Recuperación de Contraseña</h2>
+                <p>
+                    Si olvidó sus credenciales, presione <em>"¿Olvidaste tu contraseña?"</em> para recibir un enlace de recuperación directo a su correo electrónico.
+                </p>
+                <div class="screenshot-box">
+                    <img src="img/04_recuperar_password.png" alt="Recuperar Contraseña" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Recuperación de Contraseña</strong>
+                        <span class="filename">docs/img/04_recuperar_password.png</span>
+                        <em>Toma la captura de la ruta: /forgot-password</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 2.3: Formulario para solicitar enlace de restablecimiento.</div>
+                </div>
+
+                <h2 class="seccion-titulo">2.4. Cambio de Idioma</h2>
+                <p>
+                    Bella Flor POS soporta Español, Inglés e Italiano. Puede cambiar de idioma en cualquier momento usando el menú desplegable en la barra de navegación superior.
+                </p>
+
+                <h2 class="seccion-titulo">2.5. Gestión de Perfil y Clave Personal</h2>
+                <p>
+                    En el menú <strong>Mi Perfil</strong> (<code>/perfil</code>), cada colaborador puede modificar su nombre, teléfono y actualizar su clave de acceso personal periódicamente.
+                </p>
+                <div class="screenshot-box">
+                    <img src="img/05_perfil_usuario.png" alt="Perfil de Usuario" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Mi Perfil</strong>
+                        <span class="filename">docs/img/05_perfil_usuario.png</span>
+                        <em>Toma la captura de la ruta: /perfil</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 2.4: Pantalla de edición de datos personales y seguridad.</div>
+                </div>
+            </div>
+
+            <div class="page-break"></div>
+
+            <!-- ========================================== -->
+            <!-- CAPÍTULO 3                                 -->
+            <!-- ========================================== -->
+            <div id="cap3">
+                <h1 class="capitulo-titulo">CAPÍTULO 3: PANELES PRINCIPALES (DASHBOARDS)</h1>
+
+                <h2 class="seccion-titulo">3.1. Dashboard del Administrador</h2>
+                <p>
+                    Al iniciar sesión como Administrador, el sistema muestra el panel central (<code>/admin</code>) con los principales indicadores de rendimiento comercial.
+                </p>
+                <div class="screenshot-box">
+                    <img src="img/06_dashboard_admin.png" alt="Dashboard Administrador" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Dashboard del Administrador</strong>
+                        <span class="filename">docs/img/06_dashboard_admin.png</span>
+                        <em>Toma la captura de la ruta: /admin</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 3.1: Panel gerencial con métricas y gráficos de ventas.</div>
+                </div>
+
+                <h2 class="seccion-titulo">3.2. Panel del Vendedor</h2>
+                <p>
+                    El rol Vendedor accede a un entorno optimizado (<code>/ventas</code>) con accesos directos al POS y resumen de sus ventas del día.
+                </p>
+                <div class="screenshot-box">
+                    <img src="img/07_dashboard_vendedor.png" alt="Dashboard Vendedor" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Panel del Vendedor</strong>
+                        <span class="filename">docs/img/07_dashboard_vendedor.png</span>
+                        <em>Toma la captura de la ruta: /ventas</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 3.2: Panel de ventas para personal de mostrador.</div>
+                </div>
+
+                <h2 class="seccion-titulo">3.3. Panel del Almacenero</h2>
+                <p>
+                    El Almacenero visualiza (<code>/almacen</code>) las alertas de productos con bajo stock y atajos para recepcionar compras de proveedores.
+                </p>
+                <div class="screenshot-box">
+                    <img src="img/08_dashboard_almacenero.png" alt="Dashboard Almacenero" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Panel del Almacenero</strong>
+                        <span class="filename">docs/img/08_dashboard_almacenero.png</span>
+                        <em>Toma la captura de la ruta: /almacen</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 3.3: Panel logístico con alertas de reabastecimiento.</div>
+                </div>
+            </div>
+
+            <div class="page-break"></div>
+
+            <!-- ========================================== -->
+            <!-- CAPÍTULO 4                                 -->
+            <!-- ========================================== -->
+            <div id="cap4">
+                <h1 class="capitulo-titulo">CAPÍTULO 4: MÓDULO DE PUNTO DE VENTA (POS) Y VENTAS</h1>
+
+                <h2 class="seccion-titulo">4.1. Interfaz de Venta Rápida</h2>
+                <p>
+                    Ubicada en <code>/pos/nueva-venta</code>, esta pantalla está estructurada para máxima agilidad en mostrador.
+                </p>
+                <div class="screenshot-box">
+                    <img src="img/09_pos_interfaz.png" alt="Interfaz POS" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Interfaz del POS</strong>
+                        <span class="filename">docs/img/09_pos_interfaz.png</span>
+                        <em>Toma la captura de la ruta: /pos/nueva-venta</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 4.1: Cuadrícula interactiva de productos y panel de facturación.</div>
+                </div>
+
+                <h2 class="seccion-titulo">4.2. Pasos para Realizar una Venta</h2>
+                <ol>
+                    <li><strong>Seleccionar los productos:</strong> Haga clic sobre las tarjetas de productos, escriba en el buscador o escanee con el lector óptico de código de barras.</li>
+                    <li><strong>Ajustar cantidades:</strong> Utilice los botones <code>+</code> y <code>-</code> o digite la cantidad vendida.</li>
+                    <li><strong>Seleccionar Cliente:</strong> Mantenga "Público General" o busque al cliente por su DNI o Nombre.</li>
+                    <li><strong>Proceder al Cobro:</strong> Presione el botón destacado <strong>"Cobrar / Finalizar Venta"</strong>.</li>
+                </ol>
+
+                <div class="screenshot-box">
+                    <img src="img/10_pos_carrito_cobro.png" alt="Cobro en POS" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Modal de Cobro y Métodos de Pago</strong>
+                        <span class="filename">docs/img/10_pos_carrito_cobro.png</span>
+                        <em>Toma la captura de la ventana modal o panel de cobro</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 4.2: Selección de medio de pago y cálculo de vuelto en Soles.</div>
+                </div>
+
+                <div class="callout callout-tip">
+                    <div class="callout-icon">💡</div>
+                    <div>
+                        <strong>Consejo para el cajero:</strong> Al cobrar en efectivo, introduzca la cantidad exacta que le entrega el cliente; el sistema calculará automáticamente el vuelto evitando errores humanos de caja.
+                    </div>
+                </div>
+
+                <h2 class="seccion-titulo">4.3. Impresión del Ticket de Venta</h2>
+                <p>
+                    Al procesar la transacción, se emite el comprobante de venta listo para impresora térmica:
+                </p>
+                <div class="screenshot-box">
+                    <img src="img/11_pos_ticket_venta.png" alt="Ticket de Venta" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Ticket de Venta Generado</strong>
+                        <span class="filename">docs/img/11_pos_ticket_venta.png</span>
+                        <em>Toma la captura de un ticket generado: /pos/{id}</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 4.3: Vista del ticket para impresión térmica de 80mm/58mm.</div>
+                </div>
+
+                <h2 class="seccion-titulo">4.4. Historial y Anulación de Ventas</h2>
+                <p>
+                    En <code>/pos</code> se auditan todas las operaciones pasadas. El <strong>Administrador</strong> cuenta con el botón <strong>"Anular"</strong>, el cual reintegra automáticamente las flores devueltas al inventario.
+                </p>
+                <div class="screenshot-box">
+                    <img src="img/12_pos_historial_ventas.png" alt="Historial de Ventas" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Historial de Ventas</strong>
+                        <span class="filename">docs/img/12_pos_historial_ventas.png</span>
+                        <em>Toma la captura del listado de ventas en: /pos</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 4.4: Listado de ventas con opciones de reimpresión y anulación.</div>
+                </div>
+            </div>
+
+            <div class="page-break"></div>
+
+            <!-- ========================================== -->
+            <!-- CAPÍTULO 5                                 -->
+            <!-- ========================================== -->
+            <div id="cap5">
+                <h1 class="capitulo-titulo">CAPÍTULO 5: MÓDULO DE PRODUCTOS, CATEGORÍAS E INVENTARIO</h1>
+
+                <h2 class="seccion-titulo">5.1. Catálogo General de Productos</h2>
+                <p>
+                    En el menú <strong>Productos</strong> (<code>/productos</code>), se gestiona todo el catálogo con imágenes, precios de compra/venta y niveles de stock.
+                </p>
+                <div class="screenshot-box">
+                    <img src="img/13_productos_listado.png" alt="Catálogo de Productos" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Listado de Productos</strong>
+                        <span class="filename">docs/img/13_productos_listado.png</span>
+                        <em>Toma la captura de la ruta: /productos</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 5.1: Mantenimiento de flores y productos registrados.</div>
+                </div>
+
+                <h2 class="seccion-titulo">5.2. Registro de Nuevos Productos</h2>
+                <p>
+                    En <code>/productos/create</code> se registran nuevas variedades de flores, ramos o accesorios con su respectiva foto y código de barras.
+                </p>
+                <div class="screenshot-box">
+                    <img src="img/14_productos_crear.png" alt="Crear Producto" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Formulario de Nuevo Producto</strong>
+                        <span class="filename">docs/img/14_productos_crear.png</span>
+                        <em>Toma la captura de la ruta: /productos/create</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 5.2: Formulario de ingreso de nuevo producto al catálogo.</div>
+                </div>
+
+                <h2 class="seccion-titulo">5.3. Categorías y Unidades de Medida</h2>
+                <p>
+                    Permite organizar los productos por familias botánicas (Rosas, Ramos, Girasoles) y definir unidades como unidades (UND), docenas (DOC) o ramos (RMO).
+                </p>
+                <div class="screenshot-box">
+                    <img src="img/15_categorias_listado.png" alt="Categorías" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Listado de Categorías</strong>
+                        <span class="filename">docs/img/15_categorias_listado.png</span>
+                        <em>Toma la captura de la ruta: /categorias</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 5.3: Gestión de categorías de la tienda.</div>
+                </div>
+
+                <h2 class="seccion-titulo">5.4. Kardex y Ajuste Manual de Inventario</h2>
+                <p>
+                    En <code>/inventario/kardex</code> se visualiza la trazabilidad de cada movimiento físico. Si existen mermas o flores marchitas, se registran en <code>/inventario/ajuste</code> justificando el motivo.
+                </p>
+                <div class="screenshot-box">
+                    <img src="img/17_inventario_kardex.png" alt="Kardex" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Kardex de Inventario</strong>
+                        <span class="filename">docs/img/17_inventario_kardex.png</span>
+                        <em>Toma la captura de la ruta: /inventario/kardex</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 5.4: Auditoría del Kardex con movimientos cronológicos.</div>
+                </div>
+            </div>
+
+            <div class="page-break"></div>
+
+            <!-- ========================================== -->
+            <!-- CAPÍTULO 6, 7 y 8                          -->
+            <!-- ========================================== -->
+            <div id="cap6">
+                <h1 class="capitulo-titulo">CAPÍTULO 6: MÓDULO DE COMPRAS Y PROVEEDORES</h1>
+                <p>
+                    El módulo de compras abastece la tienda registrando facturas de proveedores y actualizando el stock de forma automática.
+                </p>
+                <div class="screenshot-box">
+                    <img src="img/20_compras_nueva.png" alt="Nueva Compra" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Formulario de Nueva Compra</strong>
+                        <span class="filename">docs/img/20_compras_nueva.png</span>
+                        <em>Toma la captura de la ruta: /compras/create</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 6.1: Registro de compra a proveedor y actualización de stock.</div>
+                </div>
+            </div>
+
+            <div id="cap7" style="margin-top: 30px;">
+                <h1 class="capitulo-titulo">CAPÍTULO 7: MÓDULO DE CLIENTES</h1>
+                <p>
+                    En <code>/clientes</code> se almacena la cartera de compradores con su DNI/RUC, teléfono de contacto y dirección para envíos de arreglos a domicilio.
+                </p>
+                <div class="screenshot-box">
+                    <img src="img/22_clientes_listado.png" alt="Clientes" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Directorio de Clientes</strong>
+                        <span class="filename">docs/img/22_clientes_listado.png</span>
+                        <em>Toma la captura de la ruta: /clientes</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 7.1: Módulo de administración de clientes frecuentes.</div>
+                </div>
+            </div>
+
+            <div id="cap8" style="margin-top: 30px;">
+                <h1 class="capitulo-titulo">CAPÍTULO 8: MÓDULO DE REPORTES Y ESTADÍSTICAS</h1>
+                <p>
+                    Exclusivo para el Administrador en <code>/reportes</code>: ofrece métricas de ingresos, ventas por método de pago y ranking de productos más vendidos.
+                </p>
+                <div class="screenshot-box">
+                    <img src="img/23_reportes_ventas.png" alt="Reportes" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Reportes de Ventas</strong>
+                        <span class="filename">docs/img/23_reportes_ventas.png</span>
+                        <em>Toma la captura de la ruta: /reportes</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 8.1: Reportes financieros y filtros por rango de fechas.</div>
+                </div>
+            </div>
+
+            <div class="page-break"></div>
+
+            <!-- ========================================== -->
+            <!-- CAPÍTULO 9 y 10                            -->
+            <!-- ========================================== -->
+            <div id="cap9">
+                <h1 class="capitulo-titulo">CAPÍTULO 9: MÓDULO DE ADMINISTRACIÓN Y CONFIGURACIÓN</h1>
+
+                <h2 class="seccion-titulo">9.1. Gestión de Usuarios y Roles</h2>
+                <p>
+                    En <code>/usuarios</code> el Administrador crea las cuentas de acceso para cajeros y almaceneros, asignando su respectivo rol de seguridad.
+                </p>
+                <div class="screenshot-box">
+                    <img src="img/24_usuarios_listado.png" alt="Usuarios" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Gestión de Usuarios</strong>
+                        <span class="filename">docs/img/24_usuarios_listado.png</span>
+                        <em>Toma la captura de la ruta: /usuarios</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 9.1: Directorio de usuarios y roles del sistema.</div>
+                </div>
+
+                <h2 class="seccion-titulo">9.2. Configuración de Tienda y Tickets</h2>
+                <p>
+                    En <code>/configuracion</code> se definen el nombre oficial del negocio, número de RUC, logotipo, dirección, teléfono y el mensaje de despedida impreso en el ticket.
+                </p>
+                <div class="screenshot-box">
+                    <img src="img/25_configuracion_tienda.png" alt="Configuración" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="screenshot-placeholder" style="display:none;">
+                        📷 <strong>Captura de Pantalla: Configuración de la Tienda</strong>
+                        <span class="filename">docs/img/25_configuracion_tienda.png</span>
+                        <em>Toma la captura de la ruta: /configuracion</em>
+                    </div>
+                    <div class="screenshot-caption">Figura 9.2: Parámetros generales y encabezado de tickets.</div>
+                </div>
+            </div>
+
+            <div id="cap10" style="margin-top: 35px;">
+                <h1 class="capitulo-titulo">CAPÍTULO 10: PREGUNTAS FRECUENTES (FAQ)</h1>
+
+                <div class="callout callout-info">
+                    <div class="callout-icon">❓</div>
+                    <div>
+                        <strong>¿Cómo registrar la devolución de un cliente?</strong><br>
+                        El usuario Administrador debe buscar la venta en <code>/pos</code> y presionar el botón <strong>"Anular"</strong>. El sistema devolverá las flores al stock disponible de forma automática.
+                    </div>
+                </div>
+
+                <div class="callout callout-info">
+                    <div class="callout-icon">❓</div>
+                    <div>
+                        <strong>¿Qué hacer si un producto no aparece en el POS?</strong><br>
+                        Verifique que el producto esté marcado con estado <em>"Activo"</em> y que posea stock superior a cero.
+                    </div>
+                </div>
+
+                <div class="callout callout-info">
+                    <div class="callout-icon">❓</div>
+                    <div>
+                        <strong>¿Cómo reimprimir un comprobante pasado?</strong><br>
+                        Ingrese a <code>/pos</code>, filtre por fecha o cliente, haga clic en <em>"Ver"</em> y pulse el botón <em>"Imprimir Ticket"</em>.
+                    </div>
+                </div>
+            </div>
+
+            <!-- PIE FINAL -->
+            <div style="text-align:center; margin-top:50px; padding:20px; border-top:1px solid var(--borde); font-size:12px; color:var(--texto-mutado);">
+                <strong>FLORERÍA BELLA FLOR POS</strong> · Manual Oficial de Usuario del Sistema · Release 1.0 Final (2026)
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
